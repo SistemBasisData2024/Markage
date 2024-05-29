@@ -23,6 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 
-*/Backend/.env
+*/.env
 */.gitignore
 */node_module
