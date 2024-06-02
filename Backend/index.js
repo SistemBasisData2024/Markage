@@ -4,6 +4,7 @@ const cors = require("cors");
 const connectDB = require('./connector.js');
 const PORT = process.env.PORT || 3000;
 const routes = require("./_routes/_routes.js");
+const productRouter = require('./_routes/productRoute.js');
 
 require('dotenv').config();
 
@@ -15,5 +16,5 @@ connectDB.connectDB();
 app.use(routes);
 
 app.listen(PORT, () => {
-    console.log('Server listening on port', PORT)
+    console.log('Server listening on port', PORT)   
 });
