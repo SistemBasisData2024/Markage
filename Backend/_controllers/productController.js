@@ -21,6 +21,7 @@ const getProductByName = async (req, res) => {
     }
 };
 
+
 // Get product by type
 const getProductByType = async (req, res) => {
     const { type } = req.query;

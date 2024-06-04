@@ -1,11 +1,14 @@
 const express = require("express");
 const productRouter = require("./productRoute.js");
-const memberRouter = require("./membershipRoute.js");
+const transactionRouter = require("./transactionRoute.js");
+const membershipRouter = require("./membershipRoute.js");
 const rewardRouter = require("./rewardRoute.js");
 const router = express.Router();
 
 router.use("/product", productRouter);
-router.use("/membership", memberRouter);
+router.use("/transaction",transactionRouter);
+router.use("/membership",membershipRouter);
+router.use("/reward",rewardRouter);
 
 module.exports = router;
 
