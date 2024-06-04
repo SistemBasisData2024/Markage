@@ -9,8 +9,8 @@ const productRouter = require('./_routes/productRoute.js');
 require('dotenv').config();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
 connectDB.connectDB();
 app.use(routes);

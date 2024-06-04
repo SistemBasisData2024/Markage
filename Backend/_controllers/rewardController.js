@@ -3,7 +3,7 @@ const pool = require("./_pool.js");
 // Get all rewards
 const getAllRewards = async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM REWARDS');
+        const result = await pool.query('SELECT * FROM REWARDS SORT BY poin ASC');
         res.status(200).json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -26,7 +26,8 @@ const addReward = async (req, res) => {
 
 // Update an existing reward
 const updateReward = async (req, res) => {
-    const { id, name, point } = req.body;
+    const { id } = req.params;
+    const { name, point } = req.body;
     try {
         const result = await pool.query(
             'UPDATE REWARDS SET name = $1, point = $2 WHERE id = $3 RETURNING *',

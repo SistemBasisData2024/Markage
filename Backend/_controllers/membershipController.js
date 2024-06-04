@@ -17,17 +17,19 @@ const getMembershipById = async (req, res) => {
         const result = await pool.query('SELECT * FROM MEMBERSHIPS WHERE id = $1', [id]);
         res.status(200).json(result.rows[0]);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 };
 
 // Get membership by telephone
 const getMembershipByTelephone = async (req, res) => {
-    const { telephone } = req.query;
+    const { telephone } = req.body;
     try {
         const result = await pool.query('SELECT * FROM MEMBERSHIPS WHERE telephone = $1', [telephone]);
         res.status(200).json(result.rows);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 };
@@ -48,7 +50,8 @@ const addMembership = async (req, res) => {
 
 // Update an existing membership
 const updateMembership = async (req, res) => {
-    const { id, name, point, telephone } = req.body;
+    const { id } = req.params;
+    const { name, point, telephone } = req.body;
     try {
         const result = await pool.query(
             'UPDATE MEMBERSHIPS SET name = $1, point = $2, telephone = $3 WHERE id = $4 RETURNING *',
