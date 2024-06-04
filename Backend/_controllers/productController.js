@@ -12,7 +12,7 @@ const getAllProducts = async (req, res) => {
 
 // Get product by name
 const getProductByName = async (req, res) => {
-    const { name } = req.query;
+    const { name } = req.body;
     try {
         const result = await pool.query('SELECT * FROM PRODUCTS WHERE name = $1', [name]);
         res.status(200).json(result.rows);
@@ -73,7 +73,7 @@ const updateProduct = async (req, res) => {
 
 // Delete a product
 const deleteProduct = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const result = await pool.query('DELETE FROM PRODUCTS WHERE id = $1 RETURNING *', [id]);
         res.status(200).json(result.rows[0]);
