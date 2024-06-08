@@ -6,5 +6,4 @@ transactionRouter.get("/getAll", transactionController.getAllTransactions);
 transactionRouter.get("/getTransactionById/:id", transactionController.getTransactionById);
 transactionRouter.post("/addTransaction", transactionController.addTransaction);
 
-
 module.exports = transactionRouter;
