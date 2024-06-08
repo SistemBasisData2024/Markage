@@ -24,7 +24,7 @@ const getMembershipById = async (req, res) => {
 
 // Get membership by telephone
 const getMembershipByTelephone = async (req, res) => {
-    const { telephone } = req.body;
+    const { telephone } = req.query;
     try {
         const result = await pool.query('SELECT * FROM MEMBERSHIPS WHERE telephone = $1', [telephone]);
         res.status(200).json(result.rows);
@@ -33,6 +33,7 @@ const getMembershipByTelephone = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 // Add a new membership
 const addMembership = async (req, res) => {

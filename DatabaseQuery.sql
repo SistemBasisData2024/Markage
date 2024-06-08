@@ -36,3 +36,4 @@ CREATE TABLE REWARDS (
     name VARCHAR,
     point INTEGER
 );
+

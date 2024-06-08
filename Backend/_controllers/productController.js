@@ -21,7 +21,7 @@ const getListedProducts = async (req, res) => {
 
 // Get product by name or type
 const getProductByKey = async (req, res) => {
-    const { key } = req.body;
+    const { key } = req.query; // Mengambil parameter pencarian dari req.query
     try {
         const result = await pool.query('SELECT * FROM PRODUCTS WHERE unlisted = false AND (name ILIKE $1 OR type ILIKE $1)', [`%${key}%`]);
         res.status(200).json(result.rows);
@@ -29,6 +29,7 @@ const getProductByKey = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
 
 
 // Get product by type
