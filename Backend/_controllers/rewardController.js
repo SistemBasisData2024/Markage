@@ -3,7 +3,7 @@ const pool = require("./_pool.js");
 // Get all rewards
 const getAllRewards = async (req, res) => {
     try {
-        const result = await pool.query('SELECT * FROM REWARDS SORT BY poin ASC');
+        const result = await pool.query('SELECT * FROM REWARDS ORDER BY point ASC');
         res.status(200).json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
