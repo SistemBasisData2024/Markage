@@ -9,7 +9,7 @@ const getAllProducts = async (req, res) => {
     }
 };
 
-// Get listed products
+/* // Get listed products
 const getListedProducts = async (req, res) => {
     try {
         const result = await pool.query('SELECT * FROM PRODUCTS WHERE unlisted = false');
@@ -17,13 +17,13 @@ const getListedProducts = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-};
+}; */
 
-// Get product by name or type
+// Get product by name or category
 const getProductByKey = async (req, res) => {
     const { key } = req.query; // Mengambil parameter pencarian dari req.query
     try {
-        const result = await pool.query('SELECT * FROM PRODUCTS WHERE unlisted = false AND (name ILIKE $1 OR type ILIKE $1)', [`%${key}%`]);
+        const result = await pool.query('SELECT * FROM PRODUCTS WHERE name ILIKE $1 OR category ILIKE $1', [`%${key}%`]);
         res.status(200).json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -31,12 +31,11 @@ const getProductByKey = async (req, res) => {
 };
 
 
-
-// Get product by type
-//  const getProductByType = async (req, res) => {
-//     const { type } = req.body;
+// Get product by category
+//  const getProductBycategory = async (req, res) => {
+//     const { category } = req.body;
 //   try {
-//         const result = await pool.query('SELECT * FROM PRODUCTS WHERE type ILIKE $1', [`%${type}%`]);
+//         const result = await pool.query('SELECT * FROM PRODUCTS WHERE category ILIKE $1', [`%${category}%`]);
 //         res.status(200).json(result.rows);
 //     } catch (error) {
 //         res.status(500).json({ error: error.message });
@@ -56,11 +55,11 @@ const getProductById = async (req, res) => {
 
 // Add a new product
 const addProduct = async (req, res) => {
-    const { name, price, stock, type } = req.body;
+    const { name, price, stock, category } = req.body;
     try {
         const result = await pool.query(
-            'INSERT INTO PRODUCTS (name, price, stock, type) VALUES ($1, $2, $3, $4) RETURNING *',
-            [name, price, stock, type]
+            'INSERT INTO PRODUCTS (name, price, stock, category) VALUES ($1, $2, $3, $4) RETURNING *',
+            [name, price, stock, category]
         );
         res.status(201).json(result.rows[0]);
     } catch (error) {
@@ -71,11 +70,11 @@ const addProduct = async (req, res) => {
 // Update an existing product
 const updateProduct = async (req, res) => {
     const { id } = req.params;
-    const { name, price, stock, type } = req.body;
+    const { name, price, stock, category } = req.body;
     try {
         const result = await pool.query(
-            'UPDATE PRODUCTS SET name = $1, price = $2, stock = $3, type = $4 WHERE id = $5 RETURNING *',
-            [name, price, stock, type, id]
+            'UPDATE PRODUCTS SET name = $1, price = $2, stock = $3, category = $4 WHERE id = $5 RETURNING *',
+            [name, price, stock, category, id]
         );
         res.status(200).json(result.rows[0]);
     } catch (error) {
@@ -83,7 +82,7 @@ const updateProduct = async (req, res) => {
     }
 };
 
-// Delete a product
+/* // Delete a product
 const unlistProduct = async (req, res) => {
     const { id } = req.params;
     try {
@@ -102,15 +101,15 @@ const relistProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-};
+}; */
 
 module.exports = {
     getAllProducts,
-    getListedProducts,
+    //getListedProducts,
     getProductByKey,
     getProductById,
     addProduct,
-    updateProduct,
-    unlistProduct,
-    relistProduct
+    updateProduct
+    //unlistProduct,
+    //relistProduct
 };

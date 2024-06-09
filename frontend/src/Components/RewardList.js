@@ -57,7 +57,7 @@ const RewardList = () => {
                             <tr>
                                 <th>ID</th>
                                 <th>Name</th>
-                                <th>Point</th>
+                                <th>Discount</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -65,7 +65,7 @@ const RewardList = () => {
                             {rewards.map((reward) => (
                                 <tr key={reward.id}>
                                     <td>{reward.id}</td>
-                                    <td>{reward.name}</td>
+                                    <td>{reward.discount}%</td>
                                     <td>{reward.point}</td>
                                     <td>
                                         <Link to={`/reward/${reward.id}`} className="button is-small is-info" style={{ marginRight: '0.5rem' }}>

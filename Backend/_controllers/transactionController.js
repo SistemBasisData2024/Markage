@@ -23,21 +23,47 @@ const getTransactionById = async (req, res) => {
 
 // Add a new transaction
 const addTransaction = async (req, res) => {
-    const { customer, product_id, quantity, discount, net_price } = req.body;
+    const { telephone, products, discount, discount_cost } = req.body;
+    //contoh isi products
+    //[{
+    //  id: 1,
+    //  quantity: 2},
+    // {id: 2,
+    //  quantity: 3}]
     try {
-        const singlePrice = await pool.query(
-            'SELECT price FROM PRODUCTS where id = $1', [product_id]
+    const gross_price = 0;
+    const pointResult = 0;
+    const productsResult = Promise.all(
+        products.map(async (product) => {
+        const productResult = await pool.query(
+            "SELECT * FROM PRODUCTS WHERE id = $1",
+            [product.id]
         );
-        const {singlePriceInt} = parseInt(singlePrice.rows[0]);
-        const totalPrice = quantity * singlePriceInt;
-        const result = await pool.query(
-            'INSERT INTO TRANSACTIONS (customer, product_id, quantity, gross_price, discount, net_price) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [customer, product_id, quantity, totalPrice, discount, net_price]
+        await pool.query(
+            "UPDATE PRODUCTS SET stock = stock - $1 WHERE id = $2",
+            [product.quantity, product.id]
         );
-        res.status(201).json(result.rows[0]);
+        await pool.query(
+            "INSERT INTO TRANSACTION_PRODUCTS (transaction_id, product_id, quantity) VALUES ($1, $2, $3)",
+            [result.rows[0].id, product.id, product.quantity]
+        );
+          gross_price += productResult.rows[0].price * product.quantity;
+        return productResult.rows[0];
+        })
+    );
+    const net_price = gross_price - (gross_price*discount/100);
+        pointResult += (net_price / 50000 * 500);
+        await pool.query(
+            "UPDATE MEMBERSHIPS SET point = point + $1 - $2 where phone = $3",
+            [pointResult, discount_cost, result.rows[0].telephone]
+        );
+    const result = await pool.query(
+        "INSERT INTO TRANSACTIONS (telephone, gross_price, discount, net_price) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
+        [telephone, gross_price, discount, net_price]
+    );
+    res.status(201).json(result.rows[0]);
     } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
     }
 };
 
