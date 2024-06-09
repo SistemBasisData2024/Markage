@@ -1,4 +1,4 @@
-const pool = require("./_pool.js");
+const pool = require("../connector");
 
 const getAllProducts = async (req, res) => {
     try {
@@ -82,18 +82,18 @@ const updateProduct = async (req, res) => {
     }
 };
 
-/* // Delete a product
-const unlistProduct = async (req, res) => {
+ //Delete a product
+const deleteProduct = async (req, res) => {
     const { id } = req.params;
     try {
-        const result = await pool.query('UPDATE PRODUCTS SET unlisted = true WHERE id = $1 RETURNING *', [id]);
+        const result = await pool.query('DELETE FROM PRODUCTS WHERE id = $1 RETURNING *', [id]);
         res.status(200).json(result.rows[0]);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
-const relistProduct = async (req, res) => {
+/* const relistProduct = async (req, res) => {
     const { id } = req.params;
     try {
         const result = await pool.query('UPDATE PRODUCTS SET unlisted = false WHERE id = $1 RETURNING *', [id]);
@@ -101,7 +101,7 @@ const relistProduct = async (req, res) => {
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
-}; */
+};  */
 
 module.exports = {
     getAllProducts,
@@ -109,7 +109,8 @@ module.exports = {
     getProductByKey,
     getProductById,
     addProduct,
-    updateProduct
+    updateProduct,
+    deleteProduct
     //unlistProduct,
     //relistProduct
 };

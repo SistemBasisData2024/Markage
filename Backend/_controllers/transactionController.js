@@ -1,4 +1,4 @@
-const pool = require("./_pool.js");
+const pool = require("../connector");
 
 // Get all transactions
 const getAllTransactions = async (req, res) => {
@@ -23,47 +23,78 @@ const getTransactionById = async (req, res) => {
 
 // Add a new transaction
 const addTransaction = async (req, res) => {
-    const { telephone, products, discount, discount_cost } = req.body;
-    //contoh isi products
-    //[{
-    //  id: 1,
-    //  quantity: 2},
-    // {id: 2,
-    //  quantity: 3}]
+    const { telephone, products, rewards_id } = req.body;
+    
     try {
-    const gross_price = 0;
-    const pointResult = 0;
-    const productsResult = Promise.all(
-        products.map(async (product) => {
-        const productResult = await pool.query(
-            "SELECT * FROM PRODUCTS WHERE id = $1",
-            [product.id]
+        let gross_price = 0;
+        let pointGain = 0;
+        let discount = 0;
+        let point = 0;
+
+        // Insert the new transaction
+        let { rows: result } = await pool.query(
+            "INSERT INTO TRANSACTIONS (telephone) VALUES ($1) RETURNING *",
+            [telephone]
         );
-        await pool.query(
-            "UPDATE PRODUCTS SET stock = stock - $1 WHERE id = $2",
-            [product.quantity, product.id]
+
+        // Check if customer has a membership
+        const { rows: membership } = await pool.query(
+            "SELECT * FROM MEMBERSHIPS WHERE telephone = $1",
+            [telephone]
         );
-        await pool.query(
-            "INSERT INTO TRANSACTION_PRODUCTS (transaction_id, product_id, quantity) VALUES ($1, $2, $3)",
-            [result.rows[0].id, product.id, product.quantity]
+
+        if (membership.length > 0) {
+            // Retrieve reward details if membership exists
+            const { rows: reward } = await pool.query(
+                "SELECT * FROM REWARDS WHERE id = $1",
+                [rewards_id]
+            );
+            discount = reward[0].discount;
+            point = reward[0].point;
+        }
+
+        // Process each product
+        await Promise.all(
+            products.map(async (product) => {
+                const productResult = await pool.query(
+                    "SELECT * FROM PRODUCTS WHERE id = $1",
+                    [product.id]
+                );
+                await pool.query(
+                    "UPDATE PRODUCTS SET stock = stock - $1 WHERE id = $2 RETURNING *",
+                    [product.quantity, product.id]
+                );
+                await pool.query(
+                    "INSERT INTO PRODUCT_TRANSACTIONS (transaction_id, product_id, quantity) VALUES ($1, $2, $3) RETURNING *",
+                    [result[0].id, product.id, product.quantity]
+                );
+
+                gross_price += productResult.rows[0].price * product.quantity;
+                return productResult.rows[0];
+            })
         );
-          gross_price += productResult.rows[0].price * product.quantity;
-        return productResult.rows[0];
-        })
-    );
-    const net_price = gross_price - (gross_price*discount/100);
-        pointResult += (net_price / 50000 * 500);
-        await pool.query(
-            "UPDATE MEMBERSHIPS SET point = point + $1 - $2 where phone = $3",
-            [pointResult, discount_cost, result.rows[0].telephone]
+
+        const net_price = gross_price - (gross_price * discount / 100);
+        pointGain += (net_price / 1000);
+
+        // Update membership points if membership exists
+        if (membership.length > 0) {
+            await pool.query(
+                "UPDATE MEMBERSHIPS SET point = point + $1 - $2 WHERE telephone = $3",
+                [pointGain, point, telephone]
+            );
+        }
+
+        // Update the transaction with the calculated prices
+        const { rows: updatedTransaction } = await pool.query(
+            "UPDATE TRANSACTIONS SET gross_price = $1, discount = $2, net_price = $3 WHERE id = $4 RETURNING *",
+            [gross_price, discount, net_price, result[0].id]
         );
-    const result = await pool.query(
-        "INSERT INTO TRANSACTIONS (telephone, gross_price, discount, net_price) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *",
-        [telephone, gross_price, discount, net_price]
-    );
-    res.status(201).json(result.rows[0]);
+
+        res.status(201).json(updatedTransaction[0]);
     } catch (error) {
-    res.status(500).json({ error: error.message });
+        console.error('Query error:', error);
+        res.status(500).json({ error: error.message });
     }
 };
 
