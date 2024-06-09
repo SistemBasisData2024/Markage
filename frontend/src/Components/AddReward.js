@@ -12,7 +12,7 @@ const AddReward = () => {
     const addReward = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/addReward', { name, point });
+            const response = await axios.post('http://localhost:3000/reward/', { name, point });
             if (response.status === 201) {
                 navigate('/reward'); // Ensure the route matches your router configuration
             } else {

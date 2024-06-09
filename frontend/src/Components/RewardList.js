@@ -12,7 +12,7 @@ const RewardList = () => {
 
     const fetchRewards = async () => {
         try {
-            const response = await axios.get("http://localhost:3000/getAllRewards");
+            const response = await axios.get("http://localhost:3000/reward");
             setRewards(response.data);
         } catch (error) {
             console.error("There was an error fetching the rewards!", error);
@@ -21,7 +21,7 @@ const RewardList = () => {
 
     const deleteReward = async (id) => {
         try {
-            await axios.delete(`http://localhost:3000/deleteReward/${id}`);
+            await axios.delete(`http://localhost:3000/reward/${id}`);
             fetchRewards();
         } catch (error) {
             console.log(error);
