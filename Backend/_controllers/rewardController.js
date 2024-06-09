@@ -41,7 +41,7 @@ const updateReward = async (req, res) => {
 
 // Delete a reward
 const deleteReward = async (req, res) => {
-    const { id } = req.body;
+    const { id } = req.params;
     try {
         const result = await pool.query('DELETE FROM REWARDS WHERE id = $1 RETURNING *', [id]);
         res.status(200).json(result.rows[0]);

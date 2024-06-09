@@ -15,7 +15,7 @@ const EditReward = () => {
 
     const fetchReward = async () => {
         try {
-            const response = await axios.get(`http://localhost:3000/getReward/${id}`);
+            const response = await axios.get(`http://localhost:3000/reward/${id}`);
             setName(response.data.name);
             setPoint(response.data.point);
         } catch (error) {
@@ -26,8 +26,8 @@ const EditReward = () => {
     const updateReward = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:3000/updateReward/${id}`, { name, point });
-            navigate('/rewards');
+            await axios.put(`http://localhost:3000/reward/${id}`, { name, point });
+            navigate('/reward');
         } catch (error) {
             console.error('There was an error updating the reward!', error);
         }
