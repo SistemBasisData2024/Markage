@@ -52,7 +52,7 @@ const MembershipList = () => {
                 <div id="navbarBasicExample" className="navbar-menu">
                     <div className="navbar-end">
                         <Link className="navbar-item" to="/">Home</Link>
-                        <Link className="navbar-item" to="/transactions">Transactions</Link>
+                        <Link className="navbar-item" to="/transaction">Transactions</Link>
                         <Link className="navbar-item" to="/reward">Rewards</Link>
                         <Link className="navbar-item" to="/product">Product List</Link>
                     </div>

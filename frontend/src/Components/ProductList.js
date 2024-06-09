@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Route, Routes, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "bulma/css/bulma.min.css";
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
   const [searchKey, setSearchKey] = useState("");
-  const [quantities, setQuantities] = useState({});
 
   useEffect(() => {
     fetchProducts();
@@ -23,34 +22,16 @@ const ProductList = () => {
 
   const handleSearch = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/product/search", {
-        params: { key: searchKey },
-      });
+      const response = await axios.get(
+        "http://localhost:3000/product/search",
+        {
+          params: { key: searchKey },
+        }
+      );
       setProducts(response.data);
     } catch (error) {
       console.error("There was an error searching the products!", error);
     }
-  };
-
-  // const deleteProduct = async (id) => {
-  //   try {
-  //     await axios.delete(`http://localhost:3000/product/${id}`);
-  //     fetchProducts();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  const handleQuantityChange = (id, value) => {
-    setQuantities({
-      ...quantities,
-      [id]: value,
-    });
-  };
-
-  const handleBuy = (id) => {
-    console.log("AAA");
-    // Here, you would implement the logic to handle the buying action, e.g., sending a request to the server.
   };
 
   return (
@@ -71,7 +52,7 @@ const ProductList = () => {
             <Link className="navbar-item" to="/">
               Home
             </Link>
-            <Link className="navbar-item" to="/transactions">
+            <Link className="navbar-item" to="/transaction">
               Transactions
             </Link>
             <Link className="navbar-item" to="/reward">
@@ -114,7 +95,6 @@ const ProductList = () => {
                 <th>Stock</th>
                 <th>Category</th>
                 <th>Edit</th>
-                <th>Buy</th>
               </tr>
             </thead>
             <tbody>
@@ -139,33 +119,6 @@ const ProductList = () => {
                     >
                       Delete
                     </button> */}
-                  </td>
-                  <td>
-                    <div className="field has-addons">
-                      <div className="control">
-                        <input
-                          className="input"
-                          type="number"
-                          min="0"
-                          placeholder="Qty"
-                          value={quantities[product.id] || 0}
-                          onChange={(e) =>
-                            handleQuantityChange(
-                              product.id,
-                              parseInt(e.target.value)
-                            )
-                          }
-                        />
-                      </div>
-                      <div className="control">
-                        <button
-                          onClick={() => handleBuy(product.id)}
-                          className="button is-primary"
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
                   </td>
                 </tr>
               ))}
