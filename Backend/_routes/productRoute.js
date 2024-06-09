@@ -7,7 +7,7 @@ productRouter.get('', productController.getAllProducts);
 productRouter.get(`/search`, productController.getProductByKey);
 productRouter.get(`/:id`, productController.getProductById);
 productRouter.put(`/:id`, productController.updateProduct);
-productRouter.delete(`/:id`, productController.deleteProduct);
+// productRouter.delete(`/:id`, productController.deleteProduct);
 //productRouter.put('/relist/:id', productController.relistProduct)
 productRouter.post(``, productController.addProduct);
 
