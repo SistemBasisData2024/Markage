@@ -9,63 +9,22 @@ const getAllProducts = async (req, res) => {
   }
 };
 
-/* // Get listed products
-const getListedProducts = async (req, res) => {
-    try {
-        const result = await pool.query('SELECT * FROM PRODUCTS WHERE unlisted = false');
-        res.status(200).json(result.rows);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-}; */
-
 // Get product by name or category
 const getProductByKey = async (req, res) => {
-<<<<<<< HEAD
   const { key } = req.query; // Mengambil parameter pencarian dari req.query
-=======
-    const { key } = req.query; // Mengambil parameter pencarian dari req.query
-    
-    if (!key) {
-        return res.status(400).json({ error: "Search key is required" });
-    }
-
-    try {
-        const result = await pool.query('SELECT * FROM PRODUCTS WHERE name ILIKE $1 OR category::text ILIKE $1', [`%${key}%`]);
-        res.status(200).json(result.rows);
-    } catch (error) {
-        console.error('Query error:', error);
-        res.status(500).json({ error: error.message });
-    }
-};
->>>>>>> 5e90204d43b73b7e6709a4f6d01af188f04859d2
 
   if (!key) {
     return res.status(400).json({ error: "Search key is required" });
   }
 
   try {
-    const result = await pool.query(
-      "SELECT * FROM PRODUCTS WHERE name ILIKE $1 OR category::text ILIKE $1",
-      [`%${key}%`]
-    );
+    const result = await pool.query('SELECT * FROM PRODUCTS WHERE name ILIKE $1 OR category::text ILIKE $1', [`%${key}%`]);
     res.status(200).json(result.rows);
   } catch (error) {
-    console.error("Query error:", error);
+    console.error('Query error:', error);
     res.status(500).json({ error: error.message });
   }
 };
-
-// Get product by category
-//  const getProductBycategory = async (req, res) => {
-//     const { category } = req.body;
-//   try {
-//         const result = await pool.query('SELECT * FROM PRODUCTS WHERE category ILIKE $1', [`%${category}%`]);
-//         res.status(200).json(result.rows);
-//     } catch (error) {
-//         res.status(500).json({ error: error.message });
-//     }
-// };
 
 // Get product by ID
 const getProductById = async (req, res) => {
@@ -109,38 +68,25 @@ const updateProduct = async (req, res) => {
   }
 };
 
-//Delete a product
-const deleteProduct = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const result = await pool.query(
-      "DELETE FROM PRODUCTS WHERE id = $1 RETURNING *",
-      [id]
-    );
-    res.status(200).json(result.rows[0]);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
-
-/* const relistProduct = async (req, res) => {
-    const { id } = req.params;
-    try {
-        const result = await pool.query('UPDATE PRODUCTS SET unlisted = false WHERE id = $1 RETURNING *', [id]);
-        res.status(200).json(result.rows[0]);
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-};  */
+// //Delete a product
+// const deleteProduct = async (req, res) => {
+//   const { id } = req.params;
+//   try {
+//     const result = await pool.query(
+//       "DELETE FROM PRODUCTS WHERE id = $1 RETURNING *",
+//       [id]
+//     );
+//     res.status(200).json(result.rows[0]);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
 
 module.exports = {
   getAllProducts,
-  //getListedProducts,
   getProductByKey,
   getProductById,
   addProduct,
   updateProduct,
-  deleteProduct,
-  //unlistProduct,
-  //relistProduct
+  // deleteProduct,
 };
