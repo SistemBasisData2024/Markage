@@ -9,10 +9,13 @@ const AddReward = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
+    // Function to handle reward addition
     const addReward = async (e) => {
-        e.preventDefault();
+        e.preventDefault(); // Prevent default form submission behavior
         try {
+            // Send a POST request to add the reward
             const response = await axios.post('http://localhost:3000/reward/', { discount, point });
+            // If reward added successfully, navigate to the reward list page
             if (response.status === 201) {
                 navigate('/reward'); // Ensure the route matches your router configuration
             } else {
@@ -28,8 +31,10 @@ const AddReward = () => {
         <section className="section">
             <div className="container">
                 <h1 className="title">Add Reward</h1>
+                {/* Display error message if there is any */}
                 {error && <div className="notification is-danger">{error}</div>}
                 <form onSubmit={addReward}>
+                    {/* Discount input field */}
                     <div className="field">
                         <label className="label">Discount</label>
                         <div className="control">
@@ -43,6 +48,7 @@ const AddReward = () => {
                             />
                         </div>
                     </div>
+                    {/* Point input field */}
                     <div className="field">
                         <label className="label">Point</label>
                         <div className="control">
@@ -56,6 +62,7 @@ const AddReward = () => {
                             />
                         </div>
                     </div>
+                    {/* Submit button */}
                     <div className="control">
                         <button className="button is-primary" type="submit">Add Reward</button>
                     </div>
