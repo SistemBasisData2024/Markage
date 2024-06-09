@@ -4,7 +4,7 @@ import axios from 'axios';
 import 'bulma/css/bulma.min.css';
 
 const AddReward = () => {
-    const [name, setName] = useState('');
+    const [discount, setDiscount] = useState('');
     const [point, setPoint] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -12,7 +12,7 @@ const AddReward = () => {
     const addReward = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/reward/', { name, point });
+            const response = await axios.post('http://localhost:3000/reward/', { discount, point });
             if (response.status === 201) {
                 navigate('/reward'); // Ensure the route matches your router configuration
             } else {
@@ -26,43 +26,42 @@ const AddReward = () => {
 
     return (
         <section className="section">
-        <div className="container">
-            <h1 className="title">Add Reward</h1>
-            {error && <div className="notification is-danger">{error}</div>}
-            <form onSubmit={addReward}>
-                <div className="field">
-                    <label className="label">Name</label>
-                    <div className="control">
-                        <input
-                            className="input"
-                            type="text"
-                            placeholder="Reward Name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
-                            required
-                        />
+            <div className="container">
+                <h1 className="title">Add Reward</h1>
+                {error && <div className="notification is-danger">{error}</div>}
+                <form onSubmit={addReward}>
+                    <div className="field">
+                        <label className="label">Discount</label>
+                        <div className="control">
+                            <input
+                                className="input"
+                                type="number"
+                                placeholder="Reward Discount"
+                                value={discount}
+                                onChange={(e) => setDiscount(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="field">
-                    <label className="label">Point</label>
-                    <div className="control">
-                        <input
-                            className="input"
-                            type="number"
-                            placeholder="Reward Point"
-                            value={point}
-                            onChange={(e) => setPoint(e.target.value)}
-                            required
-                        />
+                    <div className="field">
+                        <label className="label">Point</label>
+                        <div className="control">
+                            <input
+                                className="input"
+                                type="number"
+                                placeholder="Reward Point"
+                                value={point}
+                                onChange={(e) => setPoint(e.target.value)}
+                                required
+                            />
+                        </div>
                     </div>
-                </div>
-                <div className="control">
-                    <button className="button is-primary" type="submit">Add Reward</button>
-                </div>
-            </form>
-        </div>
+                    <div className="control">
+                        <button className="button is-primary" type="submit">Add Reward</button>
+                    </div>
+                </form>
+            </div>
         </section>
-
     );
 };
 

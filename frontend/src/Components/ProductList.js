@@ -14,7 +14,7 @@ const ProductList = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/product/all");
+      const response = await axios.get("http://localhost:3000/product/");
       setProducts(response.data);
     } catch (error) {
       console.error("There was an error fetching the products!", error);
@@ -32,14 +32,14 @@ const ProductList = () => {
     }
   };
 
-  const deleteProduct = async (id) => {
-    try {
-      await axios.delete(`http://localhost:3000/product/${id}`);
-      fetchProducts();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  // const deleteProduct = async (id) => {
+  //   try {
+  //     await axios.delete(`http://localhost:3000/product/${id}`);
+  //     fetchProducts();
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleQuantityChange = (id, value) => {
     setQuantities({
@@ -91,7 +91,7 @@ const ProductList = () => {
               <input
                 className="input"
                 type="text"
-                placeholder="Search by name or type"
+                placeholder="Search by name or category"
                 value={searchKey}
                 onChange={(e) => setSearchKey(e.target.value)}
               />
@@ -112,8 +112,8 @@ const ProductList = () => {
                 <th>Name</th>
                 <th>Price</th>
                 <th>Stock</th>
-                <th>Type</th>
-                <th>Actions</th>
+                <th>Category</th>
+                <th>Edit</th>
                 <th>Buy</th>
               </tr>
             </thead>
@@ -124,7 +124,7 @@ const ProductList = () => {
                   <td>{product.name}</td>
                   <td>{product.price}</td>
                   <td>{product.stock}</td>
-                  <td>{product.type}</td>
+                  <td>{product.category}</td>
                   <td>
                     <Link
                       to={`/product/${product.id}`}
@@ -133,12 +133,12 @@ const ProductList = () => {
                     >
                       Edit
                     </Link>
-                    <button
+                    {/* <button
                       onClick={() => deleteProduct(product.id)}
                       className="button is-small is-danger"
                     >
                       Delete
-                    </button>
+                    </button> */}
                   </td>
                   <td>
                     <div className="field has-addons">

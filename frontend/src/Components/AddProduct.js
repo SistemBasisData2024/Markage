@@ -7,14 +7,21 @@ const AddProduct = () => {
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [stock, setStock] = useState('');
-    const [type, setType] = useState('');
+    const [category, setCategory] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
+
+    const categories = [
+        'Makanan Minuman',
+        'Kesehatan Kecantikan',
+        'Rumah Tangga Kebersihan',
+        'Pakaian'
+    ];
 
     const addProduct = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3000/product', { name, price, stock, type });
+            const response = await axios.post('http://localhost:3000/product', { name, price, stock, category });
             if (response.status === 201) {
                 navigate('/product');
             } else {
@@ -71,16 +78,20 @@ const AddProduct = () => {
                     </div>
                 </div>
                 <div className="field">
-                    <label className="label">Type</label>
+                    <label className="label">Category</label>
                     <div className="control">
-                        <input
-                            className="input"
-                            type="text"
-                            placeholder="Product Type"
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                            required
-                        />
+                        <div className="select">
+                            <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                required
+                            >
+                                <option value="" disabled>Select category</option>
+                                {categories.map((cat) => (
+                                    <option key={cat} value={cat}>{cat}</option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div className="control">

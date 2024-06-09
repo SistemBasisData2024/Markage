@@ -56,8 +56,8 @@ const RewardList = () => {
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
                                 <th>Discount</th>
+                                <th>Point</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>

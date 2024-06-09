@@ -8,6 +8,9 @@ import EditMembership from './Components/EditMembership';
 import RewardList from './Components/RewardList';
 import AddReward from './Components/AddReward';
 import EditReward from './Components/EditReward';
+import HomePage from './Components/home';
+import TransactionList from './Components/TransactionList';
+import AddTransaction from './Components/AddTransaction';
 
 function App() {
   return (
@@ -22,6 +25,9 @@ function App() {
         <Route path="/reward" element={<RewardList />} />
         <Route path="/reward/addReward" element={<AddReward />} />
         <Route path="/reward/:id" element={<EditReward />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/transaction" element={<TransactionList />} />
+        <Route path="/transaction/addTransaction" element={<AddTransaction />} />
       </Routes>
     </BrowserRouter>
   );

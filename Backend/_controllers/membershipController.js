@@ -1,4 +1,4 @@
-const pool = require("./_pool.js");
+const pool = require("../connector");
 
 // Get all memberships
 const getAllMemberships = async (req, res) => {

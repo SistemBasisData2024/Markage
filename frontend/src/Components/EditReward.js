@@ -4,7 +4,7 @@ import axios from 'axios';
 import 'bulma/css/bulma.min.css';
 
 const EditReward = () => {
-    const [name, setName] = useState('');
+    const [discount, setDiscount] = useState('');
     const [point, setPoint] = useState('');
     const { id } = useParams();
     const navigate = useNavigate();
@@ -16,7 +16,7 @@ const EditReward = () => {
     const fetchReward = async () => {
         try {
             const response = await axios.get(`http://localhost:3000/reward/${id}`);
-            setName(response.data.name);
+            setDiscount(response.data.discount);
             setPoint(response.data.point);
         } catch (error) {
             console.error('There was an error fetching the reward!', error);
@@ -26,7 +26,7 @@ const EditReward = () => {
     const updateReward = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(`http://localhost:3000/reward/${id}`, { name, point });
+            await axios.put(`http://localhost:3000/reward/${id}`, { discount, point });
             navigate('/reward');
         } catch (error) {
             console.error('There was an error updating the reward!', error);
@@ -38,14 +38,14 @@ const EditReward = () => {
             <h1 className="title">Edit Reward</h1>
             <form onSubmit={updateReward}>
                 <div className="field">
-                    <label className="label">Name</label>
+                    <label className="label">Discount</label>
                     <div className="control">
                         <input
                             className="input"
-                            type="text"
-                            placeholder="Reward Name"
-                            value={name}
-                            onChange={(e) => setName(e.target.value)}
+                            type="number"
+                            placeholder="Reward Discount"
+                            value={discount}
+                            onChange={(e) => setDiscount(e.target.value)}
                         />
                     </div>
                 </div>

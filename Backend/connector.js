@@ -1,25 +1,68 @@
+require("dotenv").config();
 const { Pool } = require("pg");
-const dotenv = require("dotenv");
+const winston = require("winston");
 
-dotenv.config();
+// Logger setup
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.json()
+  ),
+  transports: [
+    new winston.transports.Console()
+  ],
+});
 
-connectDB = async function(){
-    const pool = new Pool({
-        user: process.env.PGUSER,
-        password: process.env.PGPASSWORD,
-        host: process.env.PGHOST,
-        database: process.env.PGDATABASE,
-        
-        ssl: {
-            require: true,
-        },
+let { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPORT } = process.env;
+
+const pool = new Pool({
+  user: PGUSER,
+  password: PGPASSWORD,
+  host: PGHOST,
+  database: PGDATABASE,
+  ssl: {
+    require: true,
+  },
+  port: ENDPORT,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+  max: 20,
+  keepAlive: true,
+});
+
+const connectWithRetry = () => {
+  pool
+    .connect()
+    .then((client) => {
+      logger.info("Connected to the database");
+      client.release();
     })
-    
-    pool.connect().then(()=>{
-        console.log("Database Connected");
+    .catch((error) => {
+      logger.error("Error connecting to the database:", error);
+      logger.info("Retrying connection in 5 seconds...");
+      setTimeout(connectWithRetry, 5000); // retry after 5 seconds
     });
-}
-
-module.exports = {
-    connectDB
 };
+
+connectWithRetry();
+
+const query = async (text, params) => {
+  const start = Date.now();
+  try {
+    const res = await pool.query(text, params);
+    const duration = Date.now() - start;
+    logger.info("Executed query", {
+      text,
+      params,
+      duration,
+      rows: res.rowCount,
+    });
+    return res;
+  } catch (error) {
+    logger.error("Query error", { text, params, error });
+    throw error;
+  }
+};
+
+module.exports = { query };

@@ -3,12 +3,19 @@ import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import 'bulma/css/bulma.min.css';
 
+const categories = [
+    'Makanan Minuman',
+    'Kesehatan Kecantikan',
+    'Rumah Tangga Kebersihan',
+    'Pakaian'
+];
+
 const EditProduct = () => {
     const { id } = useParams();
     const [name, setName] = useState('');
     const [price, setPrice] = useState('');
     const [stock, setStock] = useState('');
-    const [type, setType] = useState('');
+    const [category, setCategory] = useState('');
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -20,7 +27,7 @@ const EditProduct = () => {
                 setName(product.name);
                 setPrice(product.price);
                 setStock(product.stock);
-                setType(product.type);
+                setCategory(product.category);
             } catch (error) {
                 console.error('There was an error fetching the product!', error);
                 setError('There was an error fetching the product. Please try again later.');
@@ -33,7 +40,7 @@ const EditProduct = () => {
     const updateProduct = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.put(`http://localhost:3000/product/${id}`, { name, price, stock, type });
+            const response = await axios.put(`http://localhost:3000/product/${id}`, { name, price, stock, category });
             if (response.status === 200) {
                 navigate('/product');
             } else {
@@ -90,16 +97,22 @@ const EditProduct = () => {
                     </div>
                 </div>
                 <div className="field">
-                    <label className="label">Type</label>
+                    <label className="label">Category</label>
                     <div className="control">
-                        <input
-                            className="input"
-                            type="text"
-                            placeholder="Product Type"
-                            value={type}
-                            onChange={(e) => setType(e.target.value)}
-                            required
-                        />
+                        <div className="select">
+                            <select
+                                value={category}
+                                onChange={(e) => setCategory(e.target.value)}
+                                required
+                            >
+                                <option value="" disabled>Select Category</option>
+                                {categories.map((cat) => (
+                                    <option key={cat} value={cat}>
+                                        {cat}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div className="control">
