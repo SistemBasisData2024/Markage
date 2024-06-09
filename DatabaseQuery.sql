@@ -3,13 +3,14 @@ DROP TABLE IF EXISTS REWARDS;
 DROP TABLE IF EXISTS PRODUCTS;
 DROP TABLE IF EXISTS MEMBERSHIPS;
 
+CREATE TYPE categories AS ENUM ('Makanan Minuman', 'Kesehatan Kecantikan', 'Rumah Tangga Kebersihan', 'Pakaian')
 
 CREATE TABLE PRODUCTS (
     id SERIAL PRIMARY KEY,
     name VARCHAR,
     price INTEGER,
     stock INTEGER,
-    type VARCHAR,
+    category categories,
     unlisted BOOLEAN DEFAULT FALSE
 );
 

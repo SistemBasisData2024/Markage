@@ -23,14 +23,20 @@ const getTransactionById = async (req, res) => {
 
 // Add a new transaction
 const addTransaction = async (req, res) => {
-    const { customer, product_id, quantity, gross_price, discount, net_price } = req.body;
+    const { customer, product_id, quantity, discount, net_price } = req.body;
     try {
+        const singlePrice = await pool.query(
+            'SELECT price FROM PRODUCTS where id = $1', [product_id]
+        );
+        const {singlePriceInt} = parseInt(singlePrice.rows[0]);
+        const totalPrice = quantity * singlePriceInt;
         const result = await pool.query(
             'INSERT INTO TRANSACTIONS (customer, product_id, quantity, gross_price, discount, net_price) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
-            [customer, product_id, quantity, gross_price, discount, net_price]
+            [customer, product_id, quantity, totalPrice, discount, net_price]
         );
         res.status(201).json(result.rows[0]);
     } catch (error) {
+        console.log(error);
         res.status(500).json({ error: error.message });
     }
 };
