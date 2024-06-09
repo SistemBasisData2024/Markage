@@ -21,7 +21,24 @@ const getListedProducts = async (req, res) => {
 
 // Get product by name or category
 const getProductByKey = async (req, res) => {
+<<<<<<< HEAD
   const { key } = req.query; // Mengambil parameter pencarian dari req.query
+=======
+    const { key } = req.query; // Mengambil parameter pencarian dari req.query
+    
+    if (!key) {
+        return res.status(400).json({ error: "Search key is required" });
+    }
+
+    try {
+        const result = await pool.query('SELECT * FROM PRODUCTS WHERE name ILIKE $1 OR category::text ILIKE $1', [`%${key}%`]);
+        res.status(200).json(result.rows);
+    } catch (error) {
+        console.error('Query error:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
+>>>>>>> 5e90204d43b73b7e6709a4f6d01af188f04859d2
 
   if (!key) {
     return res.status(400).json({ error: "Search key is required" });
